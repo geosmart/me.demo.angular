@@ -1,0 +1,14 @@
+{
+  "name": "angular_demo",
+  "version": "0.0.0",
+  "description": "Description for angular_demo",
+  "private": true,
+  "cacheDirectories": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "angular": "^1.4.3",
+    "angular-route": "^ 1.4.3",
+    "angular-resource": "^1.4.3"
+  }
+}

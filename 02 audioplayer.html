@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>audit player</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+<div ng-controller="PlayerController">
+    <button ng-click="play()" class="button" ng-show="!playing">Play</button>
+    <button ng-click="stop()" class="button" ng-show="playing">Stop</button>
+    Playing audio <b>{{playing}}</b>
+</div>
+<hr/>
+<pre>音频播放器</pre>
+</body>
+<script>
+    var app = angular.module('myApp', []);
+
+    app.controller("PlayerController", ['$scope', function ($scope) {
+        $scope.playing = false;
+        $scope.audio = document.createElement('audio');
+        $scope.audio.src = '/media/music-box.mp4';
+        $scope.play = function () {
+            $scope.audio.play();
+            $scope.playing = true;
+        };
+        $scope.stop = function () {
+            $scope.audio.pause();
+            $scope.playing = false;
+        };
+        $scope.audio.addEventListener('ended', function () {
+            $scope.$apply(function () {
+                $scope.stop();
+            });
+        });
+    }]);
+
+    app.controller('RelatedController', ['$scope', function ($scope) {
+
+    }])
+</script>
+</html>

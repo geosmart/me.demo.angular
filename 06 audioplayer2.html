@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>audit player</title>
+    <script src="js/vendor/custom.modernizr.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+    <link rel="stylesheet" type="text/css" href="css/foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    <script src="js/main.js"></script>
+</head>
+<body ng-controller="FrameController">
+<div class="row">
+    <h4>NPR player</h4>
+    <hr/>
+</div>
+<div class="container row">
+    <div ng-controller="PlayerController">
+        <pre>常規方式</pre>
+        <hr/>
+        <ul id="programs_list" class="">
+            <li ng-repeat="program in programs" ng-click="play(program)">
+                <span class="large-12">{{program.title.$text}}</span>
+                <a href="{{ngModel.link[0]}.$text}">Link</a>
+            </li>
+        </ul>
+        <hr/>
+
+     <pre>directive模版簽入方式</pre>
+        <hr/>
+        <ul id="programs_list2" class="">
+            <li ng-repeat="program in programs" ng-click="play(program)">
+                <span npr-link play='play(program)' ng-model='program'></span>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-controller="RelatedController">
+        <h4>Related content</h4>
+    </div>
+</div>
+</body>
+
+<script>
+    var app = angular.module('myApp', []);
+    var apiKey = 'MDExODQ2OTg4MDEzNzQ5OTM4Nzg5MzFiZA001';
+    var nprUrl = 'http://api.npr.org/query?id=61&fields=relatedLink,title,byline,text,audio,image,pullQuote,all&output=JSON';
+    var url = nprUrl + '&apiKey=' + apiKey;
+    console.log(url);
+
+    app.directive('nprLink', function () {
+        return {
+            restrict: 'EA',
+            require: ['^ngModel'],
+            replace: true,
+            scope: {
+                ngModel: '=',
+                play: '&'
+            },
+            templateUrl: 'view/nprListItem.html',
+            link: function (scope, ele, attr) {
+                scope.duration = scope.ngModel.audio[0].duration.$text;
+            }
+        }
+    });
+
+    app.controller("PlayerController", ['$scope', '$http', function ($scope, $http) {
+
+        var audio = document.createElement('audio');
+        $scope.audio = audio;
+        $scope.playing = false;
+        $scope.play = function (program) {
+            if ($scope.playing) {
+                audio.pause();
+            }
+            var audio_url = program.audio[0].format.mp4.$text;
+            audio.src = audio_url;
+            audio.play();
+            $scope.playing = true;
+        };
+        $scope.stop = function () {
+            audio.pause();
+            $scope.playing = false;
+        };
+        audio.addEventListener('ended', function () {
+            $scope.$apply(function () {
+                $scope.stop();
+            });
+        });
+        //get remote data
+        $http.get(url).success(function (data, status) {
+            $scope.programs = data.list.story;
+        }).error(function (error) {
+            console.log("error occurred：", error);
+        });
+    }]);
+
+    app.controller('RelatedController', ['$scope', function ($scope) {
+
+    }])
+
+    // Parent scope
+    app.controller('FrameController', function ($scope) {
+    });
+</script>
+</html>

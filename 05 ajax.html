@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>audit player</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+    <script src="node_modules/angular/angular.js"></script>
+</head>
+<body>
+<div ng-controller="MyController">
+    <button ng-click="request()" class="button">Make Request</button>
+    <div>Response：{{response}}</div>
+</div>
+<hr/>
+<pre>Ajax请求测试</pre>
+</body>
+<script>
+    var app = angular.module("myApp", []);
+
+    app.controller("MyController", ['$scope', '$http', function ($scope, $http) {
+        $scope.request = function () {
+            $http({
+                      method: 'get',
+                      url: 'http://jsonplaceholder.typicode.com/posts/1'
+                  }).success(function (data, status, headers, config) {
+                      $scope.response=data;
+                  }
+            ).error(function (data) {
+                $scope.response=data;
+            });
+        };
+    }]);
+</script>
+</html>
