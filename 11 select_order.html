@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>hello world</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+    <script src="node_modules/angular/angular.js"></script>
+</head>
+<body>
+<div ng-controller="SelectController">
+    <select ng-model="selectedValue" ng-options="op[0] as op[1] for op in data.request_value_dictionary.cartype">
+    </select>
+    <h1>你选择的值是: {{selectedValue}}</h1>
+</div>
+</body>
+<script>
+    //使用嵌套数组实现，可排序options
+    var data={"request_value_dictionary":{"cartype":[["02","小型汽车号牌"],["01","大型汽车号牌"],["03","使馆汽车号牌"],["04","领馆汽车号牌"],["05","境外汽车号牌"],["06","外籍汽车号牌"],["07","两、三轮摩托车号牌"],["08","轻便摩托车号牌"],["09","使馆摩托车号牌"],["10","领馆摩托车号牌"],["11","境外摩托车号牌"],["12","外籍摩托车号牌"],["13","农用运输车号牌"],["14","拖拉机号牌"],["15","挂车号牌"],["16","教练汽车号牌"],["17","教练摩托车号牌"],["18","试验汽车号牌"],["19","试验摩托车号牌"],["20","临时入境汽车号牌"],["21","临时入境摩托车号牌"],["22","临时行驶车号牌"],["23","公安警车号牌"],["24","公安民用号牌"],["25","原农机号牌"],["26","香港入出境车号牌"],["27","澳门入出境车号牌"],["31","武警号牌"],["32","军队号牌"],["41","无号牌"],["42","假号牌"],["43","挪用号牌"],["99","其他"]]},"request_key_dictionary":{"carno":"车牌号码 ","cartype":"车辆类型","cardrivenumber":"发动机号","carcode":"车架号"},"service_name":"车辆违章查询V2"};
+
+    var app = angular.module("myApp", []);
+
+    app.controller('SelectController', function($scope) {
+        $scope.data = data;
+    });
+</script>
+</html>
